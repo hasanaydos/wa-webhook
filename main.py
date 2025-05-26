@@ -14,12 +14,6 @@ async def challenge_root(request: Request):
      # ✅ Monday challenge doğrulamasını kontrol et
     if "challenge" in data:
         return {"challenge": data["challenge"]}
-    return {"error": "Sadece challenge bekleniyordu"}
-
-
-@app.post("/webhook")
-async def receive_webhook(request: Request):
-    data = await request.json()
 
     # Monday.com'dan gelen örnek veri: name ve phone varsayımı
     #name = data.get("name", "Bilinmiyor")
