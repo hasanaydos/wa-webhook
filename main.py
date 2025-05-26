@@ -11,21 +11,26 @@ def home():
 async def receive_webhook(request: Request):
     data = await request.json()
 
-    # Monday webhook'tan gelen örnek veri:
+    # Monday.com'dan gelen örnek veri: name ve phone varsayımı
     name = data.get("name", "Bilinmiyor")
-    phone = data.get("phone", "Yok")
+    phone = data.get("phone", None)
 
-    # WA Toolbox için mesaj
+    if not phone:
+        return {"error": "Telefon numarası bulunamadı."}
+
+    # Gönderilecek mesaj içeriği
     message = f"📩 Yeni başvuru:\nAd: {name}\nTelefon: {phone}"
 
-    wa_api_url = "https://api.watoolbox.com/send"
+    # WA Toolbox Webhook ayarları
+    wa_webhook_url = "https://api.watoolbox.com/webhooks/9D2LHF0S4"
     wa_payload = {
-        "group_id": "WHATSAPP_GRUP_ID",   # Buraya senin grup ID’in
-        "text": message,
-        "token": "WA_TOOLBOX_TOKEN"       # Buraya senin özel token’ın
+        "action": "send-message",
+        "type": "text",
+        "content": message,
+        "phone": phone
     }
 
     async with httpx.AsyncClient() as client:
-        await client.post(wa_api_url, json=wa_payload)
+        response = await client.post(wa_webhook_url, json=wa_payload)
 
-    return {"message": "Gönderildi"}
+    return {"status": "Mesaj gönderildi"}
