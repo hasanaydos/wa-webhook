@@ -10,8 +10,9 @@ def home():
 @app.post("/")
 async def challenge_root(request: Request):
     data = await request.json()
+     # ✅ Monday challenge doğrulamasını kontrol et
     if "challenge" in data:
-        return data["challenge"]
+        return {"challenge": data["challenge"]}
     return {"error": "Sadece challenge bekleniyordu"}
 
 
@@ -19,19 +20,15 @@ async def challenge_root(request: Request):
 async def receive_webhook(request: Request):
     data = await request.json()
 
-     # Monday doğrulama isteği mi kontrol et
-    if "challenge" in data:
-        return data["challenge"]  # Monday bunu bekliyor
-
     # Monday.com'dan gelen örnek veri: name ve phone varsayımı
-    name = data.get("name", "Bilinmiyor")
-    phone = data.get("phone", None)
-
-    if not phone:
-        return {"error": "Telefon numarası bulunamadı."}
+    #name = data.get("name", "Bilinmiyor")
+    #phone = data.get("phone", None)
 
     # Gönderilecek mesaj içeriği
-    message = f"📩 Yeni başvuru:\nAd: {name}\nTelefon: {phone}"
+    #message = f"📩 Yeni başvuru:\nAd: {name}\nTelefon: {phone}"
+
+    # Verinin tamamını mesaj olarak gönder
+    message = json.dumps(data, indent=2, ensure_ascii=False)
 
     # WA Toolbox Webhook ayarları
     wa_webhook_url = "https://api.watoolbox.com/webhooks/9D2LHF0S4"
@@ -39,7 +36,7 @@ async def receive_webhook(request: Request):
         "action": "send-message",
         "type": "text",
         "content": message,
-        "phone": phone
+        "phone": "905427901559"
     }
 
     async with httpx.AsyncClient() as client:
