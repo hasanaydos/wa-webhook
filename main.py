@@ -11,6 +11,10 @@ def home():
 async def receive_webhook(request: Request):
     data = await request.json()
 
+     # Monday doğrulama isteği mi kontrol et
+    if "challenge" in data:
+        return data["challenge"]  # Monday bunu bekliyor
+
     # Monday.com'dan gelen örnek veri: name ve phone varsayımı
     name = data.get("name", "Bilinmiyor")
     phone = data.get("phone", None)
