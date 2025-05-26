@@ -7,6 +7,14 @@ app = FastAPI()
 def home():
     return {"status": "ok"}
 
+@app.post("/")
+async def challenge_root(request: Request):
+    data = await request.json()
+    if "challenge" in data:
+        return data["challenge"]
+    return {"error": "Sadece challenge bekleniyordu"}
+
+
 @app.post("/webhook")
 async def receive_webhook(request: Request):
     data = await request.json()
