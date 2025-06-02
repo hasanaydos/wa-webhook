@@ -54,7 +54,8 @@ async def challenge_root(request: Request):
     # ✅ Gönderilecek numaralar
     numbers = [
         "905427901559",
-        "905314970408"
+        "905314970408",
+        "120363313292078988@g.us"
     ]
 
     wa_webhook_url = "https://api.watoolbox.com/webhooks/9D2LHF0S4"
